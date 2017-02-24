@@ -1,21 +1,22 @@
-.mejs-offscreen{
-/* Accessibility: hide screen reader texts (and prefer "top" for RTL languages).  Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-how/ */
-	clip: rect(1px 1px 1px 1px); /* IE6, IE7 - no likey commas */
-	clip: rect(1px, 1px, 1px, 1px); /* IE8-IE11 - we likey commas, no support for clip-path */
-	clip-path: polygon(0px 0px, 0px 0px,0px 0px, 0px 0px);
-	position: absolute !important;
-	height: 1px;
-	width: 1px;
-	overflow: hidden;
+/* Accessibility: hide screen reader texts (and prefer "top" for RTL languages).
+Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-how/ */
+.mejs__offscreen {
+    clip: rect(1px, 1px, 1px, 1px); /* IE8-IE11 - no support for clip-path */
+    clip-path: polygon(0px 0px, 0px 0px, 0px 0px, 0px 0px);
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
 }
 
-.mejs-container {
-	position: relative;
-	background: #000;
-	font-family: "Helvetica", Arial, serif;
-	text-align: left;
-	vertical-align: top;
-	text-indent: 0;
+.mejs__container {
+    position: relative;
+    background: #000;
+    font-family: "Helvetica", Arial, serif;
+    text-align: left;
+    vertical-align: top;
+    text-indent: 0;
+    box-sizing: border-box;
 }
 
 .mejs-fill-container,.mejs-fill-container .mejs-container{
@@ -35,13 +36,8 @@
 	position: absolute;
 }
 
-.mejs-embed, .mejs-embed body {
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	padding: 0;
-	background: #000;
-	overflow: hidden;
+.mejs__container * {
+    box-sizing: border-box;
 }
 
 .mejs-fullscreen {
@@ -64,35 +60,33 @@
 	height: 100%;
 }
 
-.mejs-clear {
-	clear: both;
+/* Hide native play button from iOS to favor plugin button */
+.mejs__container video::-webkit-media-controls-start-playback-button {
+    display: none !important;
+    -webkit-appearance: none;
 }
 
-/* Start: LAYERS */
-.mejs-background {
-	position: absolute;
-	top: 0;
-	left: 0;
+.mejs__fill-container,
+.mejs__fill-container .mejs__container {
+    width: 100%;
+    height: 100%;
 }
 
-.mejs-mediaelement {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
+.mejs__fill-container {
+    overflow: hidden;
+    position: relative;
+    margin: 0 auto;
+    background: transparent;
 }
 
-.mejs-poster {
-	position: absolute;
-	top: 0;
-	left: 0;
-	background-size: contain ;
-	background-position: 50% 50% ;
-	background-repeat: no-repeat ;
+.mejs__container:focus {
+    outline: none;
 }
-:root .mejs-poster img {
-	display: none ;
+
+.mejs__iframe-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 .mejs-poster img {
@@ -100,14 +94,28 @@
 	padding: 0;
 }
 
-.mejs-overlay {
-	position: absolute;
-	top: 0;
-	left: 0;
+.mejs__embed,
+.mejs__embed body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #000;
+    overflow: hidden;
 }
 
-.mejs-overlay-play {
-	cursor: pointer;
+.mejs__fullscreen {
+    overflow: hidden !important;
+}
+
+.mejs__container-fullscreen {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 1000;
 }
 
 .mejs-overlay-button {
@@ -124,8 +132,21 @@
 	background-image: url("bigplay.png");
 }
 
-.mejs-overlay:hover .mejs-overlay-button {
-	background-position: 0 -100px ;
+.mejs__container-fullscreen .mejs__mediaelement,
+.mejs__container-fullscreen video {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.mejs__clear {
+    clear: both;
+}
+
+/* Start: LAYERS */
+.mejs__background {
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .mejs-overlay-loading {
@@ -153,7 +174,28 @@
 	background: transparent url("loading.gif") 50% 50% no-repeat;
 }
 
-/* End: LAYERS */
+.mejs__mediaelement {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.mejs__poster {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-size: contain;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+
+:root .mejs__poster-img {
+    display: none;
+}
 
 /* Start: CONTROL BAR */
 .mejs-container .mejs-controls {
@@ -213,7 +255,24 @@
 	outline: dotted 1px #999;
 }
 
-/* End: CONTROL BAR */
+.mejs__poster-img {
+    border: 0;
+    padding: 0;
+}
+
+.mejs__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+.mejs__layer {
+    z-index: 1;
+}
+
+.mejs__overlay-play {
+    cursor: pointer;
+}
 
 /* Start: Time (Current / Duration) */
 .mejs-container .mejs-controls .mejs-time {
@@ -238,21 +297,43 @@
 	margin: 1px 2px 0 0;
 	width: auto;
 }
-/* End: Time (Current / Duration) */
 
-/* Start: Play/Pause/Stop */
-.mejs-controls .mejs-play button {
-	background-position: 0 0;
+.mejs__overlay-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    margin: -40px 0 0 -40px;
+    background: url("mejs-controls.svg") no-repeat;
+    background-position: 0 -39px;
+    overflow: hidden;
+    z-index: 1;
 }
 
-.mejs-controls .mejs-pause button {
-	background-position: 0 -16px;
+.mejs__overlay:hover > .mejs__overlay-button {
+    background-position: -80px -39px;
 }
 
-.mejs-controls .mejs-stop button {
-	background-position: -112px 0;
+.mejs__overlay-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    margin: -40px 0 0 -40px;
 }
-/* Start: Play/Pause/Stop */
+
+.mejs__overlay-loading-bg-img {
+    display: block;
+    width: 80px;
+    height: 80px;
+    background: transparent url("mejs-controls.svg") -160px -40px no-repeat;
+    -webkit-animation: mejs-loading-spinner 1s linear infinite;
+    -moz-animation: mejs-loading-spinner 1s linear infinite;
+    animation: mejs-loading-spinner 1s linear infinite;
+    z-index: 1;
+}
 
 /* Start: Progress Bar */
 .mejs-controls div.mejs-time-rail {
@@ -402,17 +483,26 @@
 }
 */
 /* End: Progress Bar */
-
-/* Start: Fullscreen */
-.mejs-controls .mejs-fullscreen-button button {
-	background-position: -32px 0;
+@-moz-keyframes mejs-loading-spinner {
+    100% {
+        -moz-transform: rotate(360deg);
+    }
 }
 
-.mejs-controls .mejs-unfullscreen button {
-	background-position: -32px -16px;
+@-webkit-keyframes mejs-loading-spinner {
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
 }
-/* End: Fullscreen */
 
+@keyframes mejs-loading-spinner {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+/* End: LAYERS */
 
 /* Start: Mute/Volume */
 .mejs-controls .mejs-volume-button {
@@ -553,7 +643,55 @@
 	display: none;
 }
 
-/* End: Mute/Volume */
+/* Start: CONTROL BAR */
+.mejs__controls {
+    position: absolute;
+    list-style-type: none;
+    margin: 0;
+    padding: 0 10px;
+    bottom: 0;
+    left: 0;
+    height: 40px;
+    width: 100%;
+    z-index: 1;
+}
+
+.mejs__controls:not([style*="display: none"]) {
+    background: rgba(255, 0, 0, 0.7);
+    background: linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.35));
+}
+
+.mejs__button,
+.mejs__time,
+.mejs__time-rail {
+    float: left;
+    margin: 0;
+    width: 32px;
+    height: 40px;
+    font-size: 10px;
+    line-height: 10px;
+}
+
+.mejs__button > button {
+    cursor: pointer;
+    display: block;
+    font-size: 0;
+    line-height: 0;
+    text-decoration: none;
+    margin: 10px 6px;
+    padding: 0;
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    border: 0;
+    background: transparent url("mejs-controls.svg");
+    overflow: hidden;
+}
+
+/* :focus for accessibility */
+.mejs__button > button:focus {
+    outline: dotted 1px #999;
+}
 
 /* Start: Track (Captions and Chapters) */
 .mejs-controls .mejs-captions-button {
@@ -646,18 +784,40 @@
 	border: 0;
 }
 
-.mejs-chapters .mejs-chapter .mejs-chapter-block {
-	font-size: 11px;
-	color: #fff;
-	padding: 5px;
-	display: block;
-	border-right: solid 1px #333;
-	border-bottom: solid 1px #333;
-	cursor: pointer;
+.mejs__container-keyboard-inactive a,
+.mejs__container-keyboard-inactive a:focus,
+.mejs__container-keyboard-inactive button,
+.mejs__container-keyboard-inactive button:focus,
+.mejs__container-keyboard-inactive [role=slider],
+.mejs__container-keyboard-inactive [role=slider]:focus {
+    outline: 0;
 }
 
-.mejs-chapters .mejs-chapter .mejs-chapter-block-last {
-	border-right: none;
+/* End: CONTROL BAR */
+
+/* Start: Time (Current / Duration) */
+.mejs__time {
+    color: #fff;
+    display: block;
+    height: 24px;
+    width: auto;
+    font-weight: bold;
+    font-size: 11px;
+    padding: 16px 6px 0 6px;
+    overflow: hidden;
+    text-align: center;
+    box-sizing: content-box;
+}
+
+/* End: Time (Current / Duration) */
+
+/* Start: Play/Pause/Stop */
+.mejs__play > button {
+    background-position: 0 0;
+}
+
+.mejs__pause > button {
+    background-position: -20px 0;
 }
 
 .mejs-chapters .mejs-chapter .mejs-chapter-block:hover {
@@ -672,23 +832,119 @@
 	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#666666,endColorstr=#323232);
 }
 
-.mejs-chapters .mejs-chapter .mejs-chapter-block .ch-title {
-	font-size: 12px;
-	font-weight: bold;
-	display: block;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	margin: 0 0 3px 0;
-	line-height: 12px;
+.mejs__replay > button {
+    background-position: -280px 0;
 }
 
-.mejs-chapters .mejs-chapter .mejs-chapter-block .ch-timespan {
-	font-size: 12px;
-	line-height: 12px;
-	margin: 3px 0 4px 0;
-	display: block;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+/* End: Play/Pause/Stop */
+
+/* Start: Progress Bar */
+.mejs__time-rail {
+    direction: ltr;
+    width: 200px;
+    padding-top: 10px;
+    height: 40px;
+    position: relative;
+    margin: 0 10px;
+}
+
+.mejs__time-total,
+.mejs__time-buffering,
+.mejs__time-loaded,
+.mejs__time-current,
+.mejs__time-handle,
+.mejs__time-float,
+.mejs__time-float-current,
+.mejs__time-float-corner,
+.mejs__time-marker {
+    cursor: pointer;
+    display: block;
+    position: absolute;
+    height: 10px;
+    border-radius: 2px;
+}
+
+.mejs__time-total {
+    margin: 5px 0 0 0;
+    background: rgba(255, 255, 255, 0.3);
+    width: 100%;
+}
+
+.mejs__time-buffering {
+    width: 100%;
+    background: linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+    background-size: 15px 15px;
+    animation: buffering-stripes 2s linear infinite;
+}
+
+@keyframes buffering-stripes {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: 30px 0;
+    }
+}
+
+.mejs__time-loaded {
+    background: rgba(255, 255, 255, .3);
+    width: 0;
+}
+
+.mejs__time-current {
+    background: rgba(255, 255, 255, 0.9);
+    width: 0;
+}
+
+.mejs__time-handle {
+    display: none;
+    position: absolute;
+    margin: 0;
+    width: 10px;
+    background: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    border: solid 2px #333;
+    top: -2px;
+    text-align: center;
+}
+
+.mejs__time-float {
+    position: absolute;
+    display: none;
+    background: #eee;
+    width: 36px;
+    height: 17px;
+    border: solid 1px #333;
+    top: -26px;
+    margin-left: -18px;
+    text-align: center;
+    color: #111;
+}
+
+.mejs__time-float-current {
+    margin: 2px;
+    width: 30px;
+    display: block;
+    text-align: center;
+    left: 0;
+}
+
+.mejs__time-float-corner {
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    line-height: 0;
+    border: solid 5px #eee;
+    border-color: #eee transparent transparent transparent;
+    border-radius: 0;
+    top: 15px;
+    left: 13px;
+}
+
+.mejs__long-video .mejs__time-float {
+    width: 48px;
 }
 
 .mejs-captions-layer {
@@ -701,21 +957,27 @@
 	color: #fff;
 }
 
-.mejs-captions-layer  a {
-	color: #fff;
-	text-decoration: underline;
+.mejs__long-video .mejs__time-float-current {
+    width: 44px;
 }
 
-.mejs-captions-layer[lang=ar] {
-	font-size: 20px;
-	font-weight: normal;
+.mejs__long-video .mejs__time-float-corner {
+    left: 18px;
 }
 
-.mejs-captions-position {
-	position: absolute;
-	width: 100%;
-	bottom: 15px;
-	left: 0;
+.mejs__broadcast {
+    color: #fff;
+    position: absolute;
+    width: 100%;
+    height: 10px;
+    top: 15px;
+}
+
+/* End: Progress Bar */
+
+/* Start: Fullscreen */
+.mejs__fullscreen-button > button {
+    background-position: -80px 0;
 }
 
 .mejs-captions-position-hover {
@@ -730,64 +992,194 @@
 	-webkit-box-shadow: 5px 0 0 rgba(20, 20, 20, 0.5), -5px 0 0 rgba(20, 20, 20, 0.5);
 	box-shadow: 5px 0 0 rgba(20, 20, 20, 0.5), -5px 0 0 rgba(20, 20, 20, 0.5);
 }
-/* End: Track (Captions and Chapters) */
 
-/* Start: Error */
-.me-cannotplay {
+.mejs__unfullscreen > button {
+    background-position: -100px 0;
 }
 
-.me-cannotplay a {
-	color: #fff;
-	font-weight: bold;
+/* End: Fullscreen */
+
+/* Start: Mute/Volume */
+.mejs__mute > button {
+    background-position: -60px 0;
 }
 
-.me-cannotplay span {
-	padding: 15px;
-	display: block;
-}
-/* End: Error */
-
-
-/* Start: Loop */
-.mejs-controls .mejs-loop-off button {
-	background-position: -64px -16px;
+.mejs__unmute > button {
+    background-position: -40px 0;
 }
 
-.mejs-controls .mejs-loop-on button {
-	background-position: -64px 0;
+.mejs__volume-button {
+    position: relative;
 }
 
-/* End: Loop */
-
-/* Start: backlight */
-.mejs-controls .mejs-backlight-off button {
-	background-position: -80px -16px;
+.mejs__volume-button > .mejs__volume-slider {
+    display: none;
+    height: 115px;
+    width: 25px;
+    background: rgba(50, 50, 50, 0.7);
+    border-radius: 0;
+    top: -115px;
+    left: 5px;
+    z-index: 1;
+    position: absolute;
+    margin: 0;
 }
 
-.mejs-controls .mejs-backlight-on button {
-	background-position: -80px 0;
+.mejs__volume-button:hover {
+    border-radius: 0 0 4px 4px;
 }
-/* End: backlight */
 
-/* Start: Picture Controls */
-.mejs-controls .mejs-picturecontrols-button {
-	background-position: -96px 0;
+.mejs__volume-total {
+    position: absolute;
+    left: 11px;
+    top: 8px;
+    width: 2px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.5);
+    margin: 0;
 }
-/* End: Picture Controls */
 
-
-/* context menu */
-.mejs-contextmenu {
-	position: absolute;
-	width: 150px;
-	padding: 10px;
-	border-radius: 4px;
-	top: 0;
-	left: 0;
-	background: #fff;
-	border: solid 1px #999;
-	z-index: 1001; /* make sure it shows on fullscreen */
+.mejs__volume-current {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    margin: 0;
 }
+
+.mejs__volume-handle {
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    width: 16px;
+    height: 6px;
+    margin: 0 0 -3px -7px;
+    background: rgba(255, 255, 255, 0.9);
+    cursor: ns-resize;
+    border-radius: 1px;
+}
+
+.mejs__horizontal-volume-slider {
+    height: 36px;
+    width: 56px;
+    position: relative;
+    display: block;
+    float: left;
+    vertical-align: middle;
+}
+
+.mejs__horizontal-volume-total {
+    position: absolute;
+    left: 0;
+    top: 16px;
+    width: 50px;
+    height: 8px;
+    margin: 0;
+    padding: 0;
+    font-size: 1px;
+    border-radius: 2px;
+    background: rgba(50, 50, 50, 0.8);
+}
+
+.mejs__horizontal-volume-current {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 1px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.mejs__horizontal-volume-handle {
+    display: none;
+}
+
+/* End: Mute/Volume */
+
+/* Start: Track (Captions and Chapters) */
+.mejs__captions-button, .mejs__chapters-button {
+    position: relative;
+}
+
+.mejs__captions-button > button {
+    background-position: -140px 0;
+}
+
+.mejs__chapters-button > button {
+    background-position: -302px 0;
+}
+
+.mejs__captions-button > .mejs__captions-selector, .mejs__chapters-button > .mejs__chapters-selector {
+    visibility: hidden;
+    position: absolute;
+    bottom: 40px;
+    right: -51px;
+    width: 85px;
+    background: rgba(50, 50, 50, 0.7);
+    border: solid 1px transparent;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 0;
+}
+
+.mejs__chapters-button > .mejs__chapters-selector {
+    width: 110px;
+}
+
+.mejs__captions-button > .mejs__captions-selector, .mejs__chapters-button > .mejs__chapters-selector {
+    visibility: visible;
+}
+
+.mejs__captions-selector-list, .mejs__chapters-selector-list {
+    margin: 0;
+    padding: 0;
+    display: block;
+    list-style-type: none !important;
+    overflow: hidden;
+}
+
+.mejs__captions-selector-list-item, .mejs__chapters-selector-list-item {
+    margin: 0 0 6px 0;
+    padding: 0 10px;
+    list-style-type: none !important;
+    display: block;
+    color: #fff;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.mejs__captions-selector-list-item:hover, .mejs__chapters-selector-list-item:hover {
+    background-color: rgb(200, 200, 200) !important;
+    background-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.mejs__captions-selector-input, .mejs__chapters-selector-input {
+    clear: both;
+    float: left;
+    margin: 3px 3px 0 5px;
+    position: absolute;
+    left: -1000px;
+}
+
+.mejs__captions-selector-label, .mejs__chapters-selector-label {
+    width: 55px;
+    float: left;
+    padding: 4px 0 0 0;
+    line-height: 15px;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.mejs__captions-selected, .mejs__chapters-selected {
+    color: rgba(33, 248, 248, 1);
+}
+
 .mejs-contextmenu .mejs-contextmenu-separator {
 	height: 1px;
 	font-size: 0;
@@ -802,18 +1194,37 @@
 	cursor: pointer;
 	color: #333;
 }
-.mejs-contextmenu .mejs-contextmenu-item:hover {
-	background: #2C7C91;
-	color: #fff;
+
+.mejs__captions-translations {
+    font-size: 10px;
+    margin: 0 0 5px 0;
 }
 
-/* Start: Source Chooser */
-.mejs-controls .mejs-sourcechooser-button {
-	position: relative;
+.mejs__captions-layer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    line-height: 20px;
+    font-size: 16px;
+    color: #fff;
 }
 
-.mejs-controls .mejs-sourcechooser-button button {
-	background-position: -128px 0;
+.mejs__captions-layer a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.mejs__captions-layer[lang=ar] {
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.mejs__captions-position {
+    position: absolute;
+    width: 100%;
+    bottom: 15px;
+    left: 0;
 }
 
 .mejs-controls .mejs-sourcechooser-button .mejs-sourcechooser-selector {
@@ -832,12 +1243,15 @@
 	border-radius: 0;
 }
 
-.mejs-controls .mejs-sourcechooser-button .mejs-sourcechooser-selector ul {
-	margin: 0;
-	padding: 0;
-	display: block;
-	list-style-type: none !important;
-	overflow: hidden;
+.mejs__captions-position-hover {
+    bottom: 35px;
+}
+
+.mejs__captions-text, .mejs__captions-text * {
+    padding: 0;
+    background: rgba(20, 20, 20, 0.5);
+    white-space: pre-wrap;
+    box-shadow: 5px 0 0 rgba(20, 20, 20, 0.5), -5px 0 0 rgba(20, 20, 20, 0.5);
 }
 
 .mejs-controls .mejs-sourcechooser-button .mejs-sourcechooser-selector ul li {
@@ -996,4 +1410,3 @@ div.mejs-speed-button {
 }
 
 /* End: Skip Back */
-
